@@ -3,6 +3,8 @@ import { NavLink, Outlet, useLoaderData, useLocation } from "react-router-dom";
 import { Country } from "./countries";
 import { getCountries } from "./countries/api";
 import { useState } from "react";
+import { TransparentContainer } from "./components/transparent-container";
+import { FaSliders } from 'react-icons/fa6'
 
 export async function rootLayoutLoader() {
   const countries = await getCountries();
@@ -14,6 +16,7 @@ export function RootLayout() {
   const location = useLocation();
   const onCountryPage = location.pathname !== "/";
 
+  const [showSearchFilters, setShowSearchFilters] = useState(false)
   const regions = [...new Set(countries.map((country) => country.region))].sort();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,44 +43,62 @@ export function RootLayout() {
   });
 
   const sidebar = (
-    <>
-      <form className="space-y-2">
-        <fieldset>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search ..."
-            className="form-field w-full"
-          />
-        </fieldset>
-        <fieldset className="flex flex-wrap">
-          {regions.map((region) => {
-            const included = searchQuery.toLowerCase().includes(region.toLowerCase());
-            console.log(included);
-
-            return (
+    <div>
+      <TransparentContainer className="px-5 pt-5 pb-2 sticky top-0">
+        <form className="space-y-2">
+          <fieldset className="flex items-center items-stretch focus-within:form-field-focus-ring">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search ..."
+              className="form-field w-full flex-1 rounded-r-none"
+            />
+            <div className="form-field rounded-l-none flex items-center justify-center">
               <button
-                key={region}
-                onClick={() => toggleRegionFilter(region)}
-                type="button"
-                className={clsx("text-gray-500 text-sm px-2 py-1 mr-1 mb-1 rounded-full", {
-                  "bg-gray-50 ": !included,
-                  "bg-primary-100": included,
+                type='button'
+                onClick={() => setShowSearchFilters(!showSearchFilters)}
+                className={clsx("text-sm p-2 rounded-md flex items-center justify-center", {
+                  'bg-gray-200': !showSearchFilters,
+                  'bg-primary-100': showSearchFilters
                 })}
               >
-                {region}
+                <FaSliders />
               </button>
-            );
-          })}
-        </fieldset>
-      </form>
-      <div className="space-y-1">
+            </div>
+          </fieldset>
+
+
+
+          {showSearchFilters && <>
+            <fieldset className="flex flex-wrap">
+              {regions.map((region) => {
+                const included = searchQuery.toLowerCase().includes(region.toLowerCase());
+                return (
+                  <button
+                    key={region}
+                    onClick={() => toggleRegionFilter(region)}
+                    type="button"
+                    className={clsx("text-gray-500 text-sm px-2 py-1 mr-1 mb-1 rounded-full", {
+                      "bg-gray-50 ": !included,
+                      "bg-primary-100": included,
+                    })}
+                  >
+                    {region}
+                  </button>
+                );
+              })}
+            </fieldset>
+          </>}
+        </form>
+      </TransparentContainer>
+
+      <div className="px-5 pb-5 space-y-1">
         {filteredCountries.map((country, index) => {
           return <CountryLink key={index} country={country} />;
         })}
       </div>
-    </>
+    </div >
   );
   return (
     <main>
@@ -88,14 +109,14 @@ export function RootLayout() {
             <Outlet />
           </>
         ) : (
-          <div className="p-5 space-y-3">{sidebar}</div>
+          <div>{sidebar}</div>
         )}
       </div>
 
       {/* Desktop */}
       <div className="hidden md:flex md:h-screen">
-        <aside className="md:w-[300px] lg:w-[400px] md:border-r">
-          <div className="p-5 h-full space-y-3">{sidebar}</div>
+        <aside className="md:w-[300px] lg:w-[400px] md:border-r md:overflow-y-scroll">
+          <div className="h-full">{sidebar}</div>
         </aside>
         <div className="flex-1 h-screen ">
           <Outlet />
