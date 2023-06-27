@@ -14,7 +14,19 @@ export function RootLayout() {
   const location = useLocation();
   const onCountryPage = location.pathname !== "/";
 
+  const regions = [...new Set(countries.map((country) => country.region))].sort();
+
   const [searchQuery, setSearchQuery] = useState("");
+  const toggleRegionFilter = (region: string) => {
+    if (searchQuery.toLowerCase().includes(region.toLowerCase())) {
+      // setSearchQuery(searchQuery.replaceAll(region, ""));
+      // Case insensitive replace all
+      setSearchQuery(searchQuery.replace(new RegExp(region, "gi"), "").trim());
+    } else {
+      setSearchQuery(`${region} ${searchQuery.trim()}`);
+    }
+  };
+
   const filteredCountries = countries.filter((country) => {
     if (!searchQuery) return true;
     const groups = searchQuery.toLowerCase().trim().split(" ");
@@ -26,23 +38,41 @@ export function RootLayout() {
         country.subregion.toLowerCase().includes(group) ||
         country.flag.toLowerCase().includes(group)
     );
-    return (
-      country.name.common.toLowerCase().includes(searchQuery) ||
-      country.name.official.toLowerCase().includes(searchQuery) ||
-      country.region.toLowerCase().includes(searchQuery) ||
-      country.subregion.toLowerCase().includes(searchQuery)
-    );
   });
 
   const sidebar = (
     <>
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search ..."
-        className="form-field w-full"
-      />
+      <form className="space-y-2">
+        <fieldset>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search ..."
+            className="form-field w-full"
+          />
+        </fieldset>
+        <fieldset className="flex flex-wrap">
+          {regions.map((region) => {
+            const included = searchQuery.toLowerCase().includes(region.toLowerCase());
+            console.log(included);
+
+            return (
+              <button
+                key={region}
+                onClick={() => toggleRegionFilter(region)}
+                type="button"
+                className={clsx("text-gray-500 text-sm px-2 py-1 mr-1 mb-1 rounded-full", {
+                  "bg-gray-50 ": !included,
+                  "bg-primary-100": included,
+                })}
+              >
+                {region}
+              </button>
+            );
+          })}
+        </fieldset>
+      </form>
       <div className="space-y-1">
         {filteredCountries.map((country, index) => {
           return <CountryLink key={index} country={country} />;
@@ -65,10 +95,10 @@ export function RootLayout() {
 
       {/* Desktop */}
       <div className="hidden md:flex md:h-screen">
-        <aside className="md:w-[300px] lg:w-[400px] md:overflow-y-scroll md:border-r">
+        <aside className="md:w-[300px] lg:w-[400px] md:border-r">
           <div className="p-5 h-full space-y-3">{sidebar}</div>
         </aside>
-        <div className="flex-1 h-screen overflow-y-scroll">
+        <div className="flex-1 h-screen ">
           <Outlet />
         </div>
       </div>
