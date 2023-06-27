@@ -1,7 +1,8 @@
 import clsx from "clsx";
-import { NavLink, Outlet, useLoaderData, useParams, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLoaderData, useLocation } from "react-router-dom";
 import { Country } from "./countries";
 import { getCountries } from "./countries/api";
+import { useState } from "react";
 
 export async function rootLayoutLoader() {
   const countries = await getCountries();
@@ -13,11 +14,40 @@ export function RootLayout() {
   const location = useLocation();
   const onCountryPage = location.pathname !== "/";
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredCountries = countries.filter((country) => {
+    if (!searchQuery) return true;
+    const groups = searchQuery.toLowerCase().trim().split(" ");
+    return groups.some(
+      (group) =>
+        country.name.common.toLowerCase().includes(group) ||
+        country.name.official.toLowerCase().includes(group) ||
+        country.region.toLowerCase().includes(group) ||
+        country.subregion.toLowerCase().includes(group) ||
+        country.flag.toLowerCase().includes(group)
+    );
+    return (
+      country.name.common.toLowerCase().includes(searchQuery) ||
+      country.name.official.toLowerCase().includes(searchQuery) ||
+      country.region.toLowerCase().includes(searchQuery) ||
+      country.subregion.toLowerCase().includes(searchQuery)
+    );
+  });
+
   const sidebar = (
     <>
-      {countries.map((country, index) => {
-        return <CountryLink key={index} country={country} />;
-      })}
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search ..."
+        className="form-field w-full"
+      />
+      <div className="space-y-1">
+        {filteredCountries.map((country, index) => {
+          return <CountryLink key={index} country={country} />;
+        })}
+      </div>
     </>
   );
   return (
@@ -29,14 +59,14 @@ export function RootLayout() {
             <Outlet />
           </>
         ) : (
-          <div className="p-5 space-y-1">{sidebar}</div>
+          <div className="p-5 space-y-3">{sidebar}</div>
         )}
       </div>
 
       {/* Desktop */}
       <div className="hidden md:flex md:h-screen">
         <aside className="md:w-[300px] lg:w-[400px] md:overflow-y-scroll md:border-r">
-          <div className="p-5 space-y-1 h-full">{sidebar}</div>
+          <div className="p-5 h-full space-y-3">{sidebar}</div>
         </aside>
         <div className="flex-1 h-screen overflow-y-scroll">
           <Outlet />

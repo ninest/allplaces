@@ -1,9 +1,9 @@
-import { useLoaderData, useParams } from "react-router-dom";
-import { getCountry } from "./countries/api";
-import { Country } from "./countries";
-import { Title } from "./components/title";
-import { getFlagSvgSrc, officialNameSame } from "./countries/functions";
+import { useLoaderData } from "react-router-dom";
 import { Debug } from "./components/debug";
+import { Title } from "./components/title";
+import { Country } from "./countries";
+import { getCountry } from "./countries/api";
+import { getFlagSvgSrc, officialNameSame } from "./countries/functions";
 
 export async function countryPageLoader({ params }: { params: { cca2: string } }) {
   const country = await getCountry(params.cca2);
@@ -12,7 +12,7 @@ export async function countryPageLoader({ params }: { params: { cca2: string } }
 
 export function CountryPage() {
   const country = useLoaderData() as Country;
-  const params = useParams();
+
   return (
     <div>
       <Title level={1}>{country.name.common}</Title>

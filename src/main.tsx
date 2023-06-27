@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RootLayout, rootLayoutLoader } from "./root-layout.tsx";
-import "./index.css";
+import "./index.scss";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { IndexPage } from "./index-page.tsx";
 import { CountryPage, countryPageLoader } from "./country-page.tsx";
@@ -17,6 +17,7 @@ const router = createBrowserRouter([
         element: <PageLayout />,
         children: [
           { index: true, element: <IndexPage /> },
+          // @ts-ignore
           { path: `/:cca2`, element: <CountryPage />, loader: countryPageLoader },
         ],
       },
