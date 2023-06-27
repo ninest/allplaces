@@ -19,7 +19,6 @@ export function RootLayout() {
   const [searchQuery, setSearchQuery] = useState("");
   const toggleRegionFilter = (region: string) => {
     if (searchQuery.toLowerCase().includes(region.toLowerCase())) {
-      // setSearchQuery(searchQuery.replaceAll(region, ""));
       // Case insensitive replace all
       setSearchQuery(searchQuery.replace(new RegExp(region, "gi"), "").trim());
     } else {
