@@ -2,17 +2,17 @@ import clsx from "clsx";
 import { useState } from "react";
 import { FaSliders } from 'react-icons/fa6';
 import { Outlet, useLoaderData, useLocation } from "react-router-dom";
-import { CountryLink } from "./components/country-nav-link";
-import { TransparentContainer } from "./components/transparent-container";
-import { Country } from "./countries";
-import { getCountries } from "./countries/api";
+import { CountryLink } from "./../../components/country-nav-link";
+import { TransparentContainer } from "./../../components/transparent-container";
+import { Country } from "./../../countries";
+import { getCountries } from "./../../countries/api";
 
-export async function rootLayoutLoader() {
+export async function explorerRootLayoutLoader() {
   const countries = await getCountries();
   return countries;
 }
 
-export function RootLayout() {
+export function ExplorerRootLayout() {
   const countries = useLoaderData() as Country[];
   const location = useLocation();
   const onCountryPage = location.pathname !== "/";

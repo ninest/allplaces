@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router-dom"
-import { getDivision } from "./countries/api"
+import { getDivision } from "./../../countries/api"
 
 export async function divisionPageLoader({ params }: { params: { cca2: string, divisionCode: string } }) {
     const division = await getDivision(params.cca2, params.divisionCode)

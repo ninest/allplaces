@@ -1,13 +1,13 @@
 
 import { ReactNode } from "react";
-import { Outlet, useLoaderData, useLocation, useParams } from "react-router-dom";
-import { CountryLink } from "./components/country-nav-link";
-import { Debug } from "./components/debug";
-import { GhostNavLink } from "./components/ghost-nav-link";
-import { Title } from "./components/title";
-import { Timezone } from "./countries";
-import { getCountry } from "./countries/api";
-import { getFlagSvgSrc, officialNameSame } from "./countries/functions";
+import { Outlet, useLoaderData, useParams } from "react-router-dom";
+import { CountryLink } from "./../../components/country-nav-link";
+import { Debug } from "./../../components/debug";
+import { GhostNavLink } from "./../../components/ghost-nav-link";
+import { Title } from "./../../components/title";
+import { Timezone } from "./../../countries";
+import { getCountry } from "./../../countries/api";
+import { getFlagSvgSrc, officialNameSame } from "./../../countries/functions";
 
 export async function countryPageLoader({ params }: { params: { cca2: string } }) {
   const { country, borderingCountries } = await getCountry(params.cca2);
@@ -84,7 +84,7 @@ export function CountryPage() {
         {country.states.length > 0 && <>
           <section>
             <Title level={2}>Divisions</Title>
-            <div className="mt-3 space-y-2">
+            <div className="mt-3 space-y-0.5">
               {country.states.map(state => {
                 const isOnStatePage = divisionCode === state.state_code
                 return <div>
@@ -92,7 +92,7 @@ export function CountryPage() {
                     <IconInfoDisplay icon={state.state_code.slice(0, 2)} title={state.name} />
                   </GhostNavLink>
                   {isOnStatePage &&
-                    <div className="mt-2 ml-5">
+                    <div className="mt-2 ml-5 mb-2">
                       <Outlet />
                     </div>
                   }

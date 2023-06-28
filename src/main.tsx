@@ -3,21 +3,21 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { CountryPage, countryPageLoader } from "./app/explorer/country-page.tsx";
 import { DivisionPage, divisionPageLoader } from "./app/explorer/division-page.tsx";
-import { IndexPage } from "./app/explorer/index-page.tsx";
-import { PageLayout } from "./app/explorer/page-layout.tsx";
-import { RootLayout, rootLayoutLoader } from "./app/explorer/root-layout.tsx";
+import { ExplorerIndexPage } from "./app/explorer/explorer-index-page.tsx";
+import { ExplorerPageLayout } from "./app/explorer/explorer-page-layout.tsx";
+import { ExplorerRootLayout, explorerRootLayoutLoader } from "./app/explorer/explorer-root-layout.tsx";
 import "./index.scss";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
-    loader: rootLayoutLoader,
+    element: <ExplorerRootLayout />,
+    loader: explorerRootLayoutLoader,
     children: [
       {
-        element: <PageLayout />,
+        element: <ExplorerPageLayout />,
         children: [
-          { index: true, element: <IndexPage /> },
+          { index: true, element: <ExplorerIndexPage /> },
           {
             // @ts-ignore
             loader: countryPageLoader,
