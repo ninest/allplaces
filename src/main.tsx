@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RootLayout, rootLayoutLoader } from "./root-layout.tsx";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { CountryPage, countryPageLoader } from "./app/explorer/country-page.tsx";
+import { DivisionPage, divisionPageLoader } from "./app/explorer/division-page.tsx";
+import { IndexPage } from "./app/explorer/index-page.tsx";
+import { PageLayout } from "./app/explorer/page-layout.tsx";
+import { RootLayout, rootLayoutLoader } from "./app/explorer/root-layout.tsx";
 import "./index.scss";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { IndexPage } from "./index-page.tsx";
-import { CountryPage, countryPageLoader } from "./country-page.tsx";
-import { PageLayout } from "./page-layout.tsx";
-import { DivisionPage, divisionPageLoader } from "./division-page.tsx";
 
 const router = createBrowserRouter([
   {
