@@ -3,21 +3,8 @@ import { useEffect } from "react"
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
 
 export function LettersRootLayout() {
+    useKeyboardNavigation()
     const keyboardLetters = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm']
-
-    const navigate = useNavigate();
-    useEffect(() => {
-        document.addEventListener('keydown', handleKeyPress)
-        return () => {
-            document.removeEventListener('keydown', handleKeyPress)
-        }
-    }, [])
-
-    const handleKeyPress = (e: KeyboardEvent) => {
-        if (e.key >= 'a' && e.key <= 'z' || e.key >= 'A' && e.key <= 'Z') {
-            navigate(`./${e.key.toUpperCase()}`)
-        }
-    }
 
     return <main className="p-5">
         {/* Keyboard */}
@@ -39,4 +26,20 @@ export function LettersRootLayout() {
             <Outlet />
         </div>
     </main>
+}
+
+function useKeyboardNavigation() {
+    const navigate = useNavigate();
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyPress)
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress)
+        }
+    }, [])
+
+    const handleKeyPress = (e: KeyboardEvent) => {
+        if (e.key >= 'a' && e.key <= 'z' || e.key >= 'A' && e.key <= 'Z') {
+            navigate(`./${e.key[0].toUpperCase()}`)
+        }
+    }
 }
