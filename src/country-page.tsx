@@ -1,8 +1,9 @@
 
 import { ReactNode } from "react";
-import { NavLink, useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useParams } from "react-router-dom";
 import { CountryLink } from "./components/country-nav-link";
 import { Debug } from "./components/debug";
+import { GhostNavLink } from "./components/ghost-nav-link";
 import { Title } from "./components/title";
 import { Timezone } from "./countries";
 import { getCountry } from "./countries/api";
@@ -22,6 +23,8 @@ export function CountryPage() {
     return country.timezones.find(tz => tz.abbreviation === abbreviation)!
   })
   timezones.sort((a, b) => a.gmtOffset - b.gmtOffset)
+
+  const { divisionCode } = useParams() as { divisionCode: string }
 
   return (
     <div>
@@ -83,9 +86,17 @@ export function CountryPage() {
             <Title level={2}>Divisions</Title>
             <div className="mt-3 space-y-3">
               {country.states.map(state => {
-                return <NavLink key={state.id} to={`./${state.state_code}`} className={'block rounded-lg -mx-2 px-2 py-2 hover:bg-gray-100 text-sm group'}>
-                  <IconInfoDisplay icon={state.state_code.slice(0, 2)} title={state.name} />
-                </NavLink>
+                const isOnStatePage = divisionCode === state.state_code
+                return <div>
+                  <GhostNavLink key={state.id} to={`./${state.state_code}`}>
+                    <IconInfoDisplay icon={state.state_code.slice(0, 2)} title={state.name} />
+                  </GhostNavLink>
+                  {isOnStatePage &&
+                    <div className="mt-2 ml-2">
+                      <Outlet />
+                    </div>
+                  }
+                </div>
               })}
             </div>
           </section>
