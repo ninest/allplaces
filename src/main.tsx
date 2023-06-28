@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { IndexPage } from "./index-page.tsx";
 import { CountryPage, countryPageLoader } from "./country-page.tsx";
 import { PageLayout } from "./page-layout.tsx";
+import { DivisionPage } from "./division-page.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,8 +18,14 @@ const router = createBrowserRouter([
         element: <PageLayout />,
         children: [
           { index: true, element: <IndexPage /> },
-          // @ts-ignore
-          { path: `/:cca2`, element: <CountryPage />, loader: countryPageLoader },
+          {
+            // @ts-ignore
+            path: `/:cca2`, element: <CountryPage />, loader: countryPageLoader,
+            children: [
+              // State/province/district page
+              { path: `/:cca2/:divisionCode`, element: <DivisionPage /> }
+            ]
+          },
         ],
       },
     ],

@@ -54,6 +54,7 @@ export interface Country {
   };
   callingCodes: string[];
   timezones: Timezone[]
+  states: State[]
 }
 
 export interface Timezone {
@@ -62,4 +63,13 @@ export interface Timezone {
   gmtOffsetName: string,
   abbreviation: string,
   tzName: string
+}
+
+export interface State {
+  id: number
+  name: string
+  state_code: string
+  latitude: string
+  longitude: string
+  type: string | null
 }

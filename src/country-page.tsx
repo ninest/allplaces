@@ -1,5 +1,6 @@
+
 import { ReactNode } from "react";
-import { useLoaderData } from "react-router-dom";
+import { NavLink, useLoaderData } from "react-router-dom";
 import { CountryLink } from "./components/country-nav-link";
 import { Debug } from "./components/debug";
 import { Title } from "./components/title";
@@ -66,14 +67,25 @@ export function CountryPage() {
                 // Add closing bracket
                 let name = tz.tzName
                 if (tz.tzName.includes("(") && !tz.tzName.includes(")")) name = name + ")"
-                console.log(name);
-
                 return <IconInfoDisplay
                   key={tz.abbreviation}
                   icon={<span className="text-xs">{tz.abbreviation}</span>}
                   title={name}
                   description={`${tz.gmtOffsetName}`} />
 
+              })}
+            </div>
+          </section>
+        </>}
+
+        {country.states.length > 0 && <>
+          <section>
+            <Title level={2}>Divisions</Title>
+            <div className="mt-3 space-y-3">
+              {country.states.map(state => {
+                return <NavLink key={state.id} to={`./${state.state_code}`} className={'block rounded-lg -mx-2 px-2 py-2 hover:bg-gray-100 text-sm group'}>
+                  <IconInfoDisplay icon={state.state_code.slice(0, 2)} title={state.name} />
+                </NavLink>
               })}
             </div>
           </section>
