@@ -4,6 +4,7 @@ import { Debug } from "./components/debug";
 import { Title } from "./components/title";
 import { getCountry } from "./countries/api";
 import { getFlagSvgSrc, officialNameSame } from "./countries/functions";
+import { ReactNode } from "react";
 
 export async function countryPageLoader({ params }: { params: { cca2: string } }) {
   const { country, borderingCountries } = await getCountry(params.cca2);
@@ -13,6 +14,7 @@ export async function countryPageLoader({ params }: { params: { cca2: string } }
 export function CountryPage() {
   const { country, borderingCountries } = useLoaderData() as Awaited<ReturnType<typeof countryPageLoader>>;
   const currencyKeys = Object.keys(country.currencies)
+  // const timezones = country.timezones.filter(tz =>)
 
   return (
     <div>
@@ -33,7 +35,7 @@ export function CountryPage() {
             <Title level={2}>Borders</Title>
             <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
               {borderingCountries.map(country => {
-                return <CountryLink country={country} />
+                return <CountryLink key={country.cca2} country={country} />
               })}
             </div>
           </section></>}
@@ -44,7 +46,23 @@ export function CountryPage() {
             <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
               {currencyKeys.map(key => {
                 const currency = country.currencies[key]
-                return <IconInfoDisplay icon={currency.symbol} title={currency.name} />
+                return <IconInfoDisplay key={key} icon={currency.symbol} title={currency.name} />
+              })}
+            </div>
+          </section>
+        </>}
+
+        {country.timezones.length > 0 && <>
+          <section>
+            <Title level={2}>Timezones</Title>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {country.timezones.map(tz => {
+                return <IconInfoDisplay
+                  key={tz.abbreviation}
+                  icon={<span className="text-xs">{tz.abbreviation}</span>}
+                  title={tz.tzName}
+                  description={`${tz.gmtOffsetName}`} />
+
               })}
             </div>
           </section>
@@ -62,11 +80,14 @@ export function CountryPage() {
   );
 }
 
-function IconInfoDisplay({ icon, title }: { icon: string, title: string }) {
+function IconInfoDisplay({ icon, title, description }: { icon: ReactNode, title: string, description?: string }) {
   return <div className="flex items-center space-x-2">
     <div className="p-1 w-8 h-8 rounded-md bg-gray-100 group-hover:bg-gray-200 flex items-center justify-center">
       {icon}
     </div>
-    <div className="font-semi">{title}</div>
+    <div>
+      <div className="font-semibold">{title}</div>
+      {description && <div className="text-sm">{description}</div>}
+    </div>
   </div>
 }
