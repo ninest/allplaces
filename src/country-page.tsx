@@ -84,7 +84,7 @@ export function CountryPage() {
         {country.states.length > 0 && <>
           <section>
             <Title level={2}>Divisions</Title>
-            <div className="mt-3 space-y-3">
+            <div className="mt-3 space-y-2">
               {country.states.map(state => {
                 const isOnStatePage = divisionCode === state.state_code
                 return <div>
@@ -92,7 +92,7 @@ export function CountryPage() {
                     <IconInfoDisplay icon={state.state_code.slice(0, 2)} title={state.name} />
                   </GhostNavLink>
                   {isOnStatePage &&
-                    <div className="mt-2 ml-2">
+                    <div className="mt-2 ml-5">
                       <Outlet />
                     </div>
                   }

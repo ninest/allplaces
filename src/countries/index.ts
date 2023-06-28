@@ -72,4 +72,12 @@ export interface State {
   latitude: string
   longitude: string
   type: string | null
+  cities: City[]
+}
+
+export interface City {
+  id: number
+  name: string
+  latitude: string
+  longitude: string
 }
