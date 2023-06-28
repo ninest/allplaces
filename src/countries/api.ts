@@ -36,3 +36,9 @@ export async function getDivision(countryCca2: string, divisionCode: string) {
   if (!division) throw Error(`Invalid country/division code ${countryCca2}/${divisionCode}`)
   return division
 }
+
+export async function getCountriesByLetter(letter: string) {
+  const countries = await getCountries()
+  const countriesWithLetter = countries.filter(c => c.name.common.toLowerCase().startsWith(letter.toLowerCase()))
+  return countriesWithLetter
+}

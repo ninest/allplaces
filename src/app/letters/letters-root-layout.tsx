@@ -1,3 +1,6 @@
+import clsx from "clsx"
+import { NavLink, Outlet } from "react-router-dom"
+
 export function LettersRootLayout() {
     const keyboardLetters = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm']
     return <main className="p-5">
@@ -7,10 +10,16 @@ export function LettersRootLayout() {
                 const letters = row.split('')
                 return <div className="space-x-2">
                     {letters.map(letter => {
-                        return <button className="uppercase font-mono w-4 h-7 rounded bg-gray-100">{letter}</button>
+                        return <NavLink
+                            to={`./${letter.toUpperCase()}`}
+                            className={({ isActive }) => clsx("uppercase font-mono w-5 h-7 p-1 rounded", { "bg-gray-100": !isActive, "bg-primary-100": isActive })}>{letter}</NavLink>
                     })}
                 </div>
             })}
         </section>
+
+        <div className="mt-5">
+            <Outlet />
+        </div>
     </main>
 }
