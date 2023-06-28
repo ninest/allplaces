@@ -124,7 +124,7 @@ export function RootLayout() {
         <aside className="md:w-[300px] lg:w-[400px] md:border-r md:overflow-y-scroll">
           <div className="h-full">{sidebar}</div>
         </aside>
-        <div className="flex-1 h-screen ">
+        <div className="flex-1 h-screen overflow-y-scroll">
           <Outlet />
         </div>
       </div>
