@@ -12,6 +12,7 @@ export async function countryPageLoader({ params }: { params: { cca2: string } }
 
 export function CountryPage() {
   const { country, borderingCountries } = useLoaderData() as Awaited<ReturnType<typeof countryPageLoader>>;
+  const currencyKeys = Object.keys(country.currencies)
 
   return (
     <div>
@@ -36,6 +37,19 @@ export function CountryPage() {
               })}
             </div>
           </section></>}
+
+        {currencyKeys.length > 0 && <>
+          <section>
+            <Title level={2}>Currencies</Title>
+            <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
+              {currencyKeys.map(key => {
+                const currency = country.currencies[key]
+                return <IconInfoDisplay icon={currency.symbol} title={currency.name} />
+              })}
+            </div>
+          </section>
+        </>}
+
         <section>
           <details>
             <summary>Raw data</summary>
@@ -48,3 +62,11 @@ export function CountryPage() {
   );
 }
 
+function IconInfoDisplay({ icon, title }: { icon: string, title: string }) {
+  return <div className="flex items-center space-x-2">
+    <div className="p-1 w-8 h-8 rounded-md bg-gray-100 group-hover:bg-gray-200 flex items-center justify-center">
+      {icon}
+    </div>
+    <div className="font-semi">{title}</div>
+  </div>
+}
