@@ -1,10 +1,11 @@
+import { ReactNode } from "react";
 import { useLoaderData } from "react-router-dom";
 import { CountryLink } from "./components/country-nav-link";
 import { Debug } from "./components/debug";
 import { Title } from "./components/title";
+import { Timezone } from "./countries";
 import { getCountry } from "./countries/api";
 import { getFlagSvgSrc, officialNameSame } from "./countries/functions";
-import { ReactNode } from "react";
 
 export async function countryPageLoader({ params }: { params: { cca2: string } }) {
   const { country, borderingCountries } = await getCountry(params.cca2);
@@ -14,7 +15,12 @@ export async function countryPageLoader({ params }: { params: { cca2: string } }
 export function CountryPage() {
   const { country, borderingCountries } = useLoaderData() as Awaited<ReturnType<typeof countryPageLoader>>;
   const currencyKeys = Object.keys(country.currencies)
-  // const timezones = country.timezones.filter(tz =>)
+
+  const tzAbbreviations = [...new Set(country.timezones.map(tz => tz.abbreviation))]
+  const timezones: Timezone[] = tzAbbreviations.map(abbreviation => {
+    return country.timezones.find(tz => tz.abbreviation === abbreviation)!
+  })
+  timezones.sort((a, b) => a.gmtOffset - b.gmtOffset)
 
   return (
     <div>
@@ -29,7 +35,7 @@ export function CountryPage() {
         <img src={getFlagSvgSrc(country)} className="w-full rounded-3xl shadow" />
       </section>
 
-      <div className="mt-5 space-y-5">
+      <div className="mt-5 space-y-7">
         {borderingCountries.length > 0 && <>
           <section>
             <Title level={2}>Borders</Title>
@@ -56,11 +62,16 @@ export function CountryPage() {
           <section>
             <Title level={2}>Timezones</Title>
             <div className="mt-3 grid grid-cols-2 gap-3">
-              {country.timezones.map(tz => {
+              {timezones.map(tz => {
+                // Add closing bracket
+                let name = tz.tzName
+                if (tz.tzName.includes("(") && !tz.tzName.includes(")")) name = name + ")"
+                console.log(name);
+
                 return <IconInfoDisplay
                   key={tz.abbreviation}
                   icon={<span className="text-xs">{tz.abbreviation}</span>}
-                  title={tz.tzName}
+                  title={name}
                   description={`${tz.gmtOffsetName}`} />
 
               })}
@@ -81,8 +92,8 @@ export function CountryPage() {
 }
 
 function IconInfoDisplay({ icon, title, description }: { icon: ReactNode, title: string, description?: string }) {
-  return <div className="flex items-center space-x-2">
-    <div className="p-1 w-8 h-8 rounded-md bg-gray-100 group-hover:bg-gray-200 flex items-center justify-center">
+  return <div className="flex items-center space-x-2 text-sm">
+    <div className="p-1 w-8 h-8 rounded-md bg-gray-100 group-hover:bg-gray-200 flex items-center justify-center font-mono">
       {icon}
     </div>
     <div>
