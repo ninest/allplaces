@@ -7,6 +7,7 @@ import { ExplorerIndexPage } from "./app/explorer/explorer-index-page.tsx";
 import { ExplorerPageLayout } from "./app/explorer/explorer-page-layout.tsx";
 import { ExplorerRootLayout, explorerRootLayoutLoader } from "./app/explorer/explorer-root-layout.tsx";
 import "./index.scss";
+import { LettersRootLayout } from "./app/letters/letters-root-layout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '/letters',
+    element: <LettersRootLayout />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
