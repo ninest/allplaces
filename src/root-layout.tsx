@@ -1,10 +1,11 @@
 import clsx from "clsx";
-import { NavLink, Outlet, useLoaderData, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { FaSliders } from 'react-icons/fa6';
+import { Outlet, useLoaderData, useLocation } from "react-router-dom";
+import { CountryLink } from "./components/country-nav-link";
+import { TransparentContainer } from "./components/transparent-container";
 import { Country } from "./countries";
 import { getCountries } from "./countries/api";
-import { useState } from "react";
-import { TransparentContainer } from "./components/transparent-container";
-import { FaSliders } from 'react-icons/fa6'
 
 export async function rootLayoutLoader() {
   const countries = await getCountries();
@@ -44,8 +45,13 @@ export function RootLayout() {
 
   const sidebar = (
     <div>
-      <TransparentContainer className="px-5 pt-5 pb-2 sticky top-0">
-        <form className="space-y-2">
+      <TransparentContainer className={clsx("px-5 pt-4 sticky top-0",
+        {
+          "pb-2": showSearchFilters,
+          "pb-4": !showSearchFilters
+        }
+      )}>
+        <form className="space-y-3">
           <fieldset className="flex items-center items-stretch focus-within:form-field-focus-ring">
             <input
               type="text"
@@ -123,36 +129,5 @@ export function RootLayout() {
         </div>
       </div>
     </main>
-  );
-}
-
-function CountryLink({ country }: { country: Country }) {
-  return (
-    <NavLink
-      to={`/${country.cca2}`}
-      className={({ isActive }) =>
-        clsx("block rounded-lg -mx-2 px-2 py-2 hover:bg-gray-100 text-sm group", { "bg-primary-50": isActive })
-      }
-    >
-      {({ isActive }) => (
-        <div className="flex space-x-2">
-          <div
-            className={clsx(
-              "p-1 w-8 h-8 rounded-md bg-gray-100 group-hover:bg-gray-200 flex items-center text-lg justify-center",
-              { "bg-primary-200": isActive }
-            )}
-          >
-            {country.flag}
-          </div>
-          <div>
-            <div className="block font-semibold">{country.name.common}</div>
-            <div>
-              {country.subregion && <>{country.subregion}, </>}
-              {country.region}
-            </div>
-          </div>
-        </div>
-      )}
-    </NavLink>
   );
 }

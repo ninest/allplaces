@@ -1,17 +1,17 @@
 import { useLoaderData } from "react-router-dom";
+import { CountryLink } from "./components/country-nav-link";
 import { Debug } from "./components/debug";
 import { Title } from "./components/title";
-import { Country } from "./countries";
 import { getCountry } from "./countries/api";
 import { getFlagSvgSrc, officialNameSame } from "./countries/functions";
 
 export async function countryPageLoader({ params }: { params: { cca2: string } }) {
-  const country = await getCountry(params.cca2);
-  return country;
+  const { country, borderingCountries } = await getCountry(params.cca2);
+  return { country, borderingCountries };
 }
 
 export function CountryPage() {
-  const country = useLoaderData() as Country;
+  const { country, borderingCountries } = useLoaderData() as Awaited<ReturnType<typeof countryPageLoader>>;
 
   return (
     <div>
@@ -22,16 +22,29 @@ export function CountryPage() {
         {country.region}
       </div>
 
-      <div className="mt-5">
+      <section className="mt-5">
         <img src={getFlagSvgSrc(country)} className="w-full rounded-3xl shadow" />
+      </section>
+
+      <div className="mt-5 space-y-5">
+        {borderingCountries.length > 0 && <>
+          <section>
+            <Title level={2}>Borders</Title>
+            <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
+              {borderingCountries.map(country => {
+                return <CountryLink country={country} />
+              })}
+            </div>
+          </section></>}
+        <section>
+          <details>
+            <summary>Raw data</summary>
+            <Debug data={country} showInProd />
+          </details>
+        </section>
       </div>
 
-      <div className="mt-5">
-        <details>
-          <summary>Raw data</summary>
-          <Debug data={country} showInProd />
-        </details>
-      </div>
     </div>
   );
 }
+
