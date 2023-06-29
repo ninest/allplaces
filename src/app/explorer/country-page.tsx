@@ -35,7 +35,7 @@ export function CountryPage() {
       </div>
 
       <section className="mt-5">
-        <img src={getFlagSvgSrc(country)} className="w-full rounded-3xl shadow" />
+        <img src={getFlagSvgSrc(country)} className="w-full md:rounded-xl md:shadow" />
       </section>
 
       <div className="mt-5 space-y-7">
