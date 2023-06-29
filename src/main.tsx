@@ -1,6 +1,6 @@
-import React, { Children } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, ScrollRestoration, createBrowserRouter } from "react-router-dom";
 import { CountryPage, countryPageLoader } from "./app/explorer/country-page.tsx";
 import { DivisionPage, divisionPageLoader } from "./app/explorer/division-page.tsx";
 import { ExplorerIndexPage } from "./app/explorer/explorer-index-page.tsx";
@@ -31,26 +31,26 @@ const router = createBrowserRouter([
                 // @ts-ignore
                 loader: divisionPageLoader,
                 path: `/:cca2/:divisionCode`,
-                element: <DivisionPage />
-              }
-            ]
+                element: <DivisionPage />,
+              },
+            ],
           },
         ],
       },
     ],
   },
   {
-    path: '/letters',
+    path: "/letters",
     element: <LettersRootLayout />,
     children: [
       {
         // @ts-ignore
         loader: letterPageLoader,
         path: `/letters/:letter`,
-        element: <LetterPage />
-      }
-    ]
-  }
+        element: <LetterPage />,
+      },
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
